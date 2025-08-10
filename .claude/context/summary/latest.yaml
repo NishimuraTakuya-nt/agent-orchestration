@@ -1,0 +1,104 @@
+project_summary:
+  name: "agent-orchestration"
+  type: "Go REST API with Clean Architecture"
+  created_at: "2025-08-10T10:30:00Z"
+  status: "implementation_completed"
+  
+architecture:
+  pattern: "Clean Architecture"
+  layers:
+    - entities: "ドメインエンティティ（User, エラー定義）"
+    - use_cases: "ビジネスロジック（UserUseCase）"
+    - interfaces: "外部インターフェース（HTTPハンドラ、リポジトリ）"
+    - infrastructure: "外部システム実装（インメモリDB）"
+  
+tech_stack:
+  language: "Go 1.24.2"
+  dependencies:
+    - "github.com/go-chi/chi/v5@v5.2.2 (HTTPルータ)"
+    - "github.com/onsi/ginkgo/v2@v2.23.4 (BDDテストフレームワーク)"
+    - "github.com/onsi/gomega@v1.38.0 (アサーションライブラリ)"
+  planned_integrations:
+    - "OpenAPI (ogen)"
+    - "Wire (DI)"
+    - "github.com/matryer/moq (モック)"
+    - "github.com/sethvargo/go-envconfig (環境変数)"
+
+implementation_status:
+  completed:
+    - "プロジェクト構造設定"
+    - "Clean Architecture基盤実装"
+    - "User エンティティとビジネスルール"
+    - "Use Caseレイヤーの実装"
+    - "HTTPハンドラ実装（chi使用）"
+    - "インメモリリポジトリ実装"
+    - "包括的テストスイート（Ginkgo + Gomega）"
+    - "テストヘルパーとモック機能"
+    - "統合テストとE2Eテスト"
+    - "Makefile設定（開発・テスト・カバレッジ）"
+  pending:
+    - "OpenAPI仕様書統合（ogen）"
+    - "Wire DIコンテナ統合"
+    - "環境変数設定（go-envconfig）"
+    - "Go toolchain環境の修正"
+
+agent_orchestration:
+  primary_agent_tasks:
+    - "タスク分解と計画立案"
+    - "Sub Agent間の協調管理"
+    - "コンテキスト情報の保存・管理"
+    - "プロジェクト状態の統合管理"
+  sub_agents_utilized:
+    - agent: "go-backend-developer"
+      tasks: "基本構造設計、依存関係設定、コア実装"
+      status: "completed_via_test_writer"
+    - agent: "go-backend-test-writer" 
+      tasks: "テストスイート実装、モック作成、品質保証"
+      status: "completed_successfully"
+
+file_structure:
+  root_files:
+    - "go.mod (依存関係管理)"
+    - "go.sum (依存関係ロック)"
+    - "Makefile (開発タスク)"
+    - "agent_orchestration_suite_test.go (Ginkgoスイート設定)"
+  directories:
+    cmd/server: "アプリケーションエントリーポイント"
+    entities: "ドメインエンティティとビジネスルール"
+    use_cases: "アプリケーションロジック"
+    interfaces: "外部インターフェース（HTTP、リポジトリ）"
+    infrastructure: "外部システム実装"
+    tests: "統合・E2Eテスト"
+    internal: "内部ヘルパー・モック"
+
+known_issues:
+  - issue: "Go toolchain version mismatch"
+    description: "go1.24.1 vs go1.24.2 バージョン不整合"
+    impact: "テスト実行時のビルドエラー"
+    resolution: "go clean -cache && go install -a std"
+    
+development_commands:
+  test:
+    - "make test-unit (ユニットテスト)"
+    - "make test-integration (統合テスト)" 
+    - "make test-e2e (E2Eテスト)"
+    - "make test-all (全テスト実行)"
+    - "make coverage (カバレッジレポート)"
+  development:
+    - "make watch-test (自動テスト実行)"
+    - "make lint (コード品質チェック)"
+    - "make format (コードフォーマット)"
+    - "make build (ビルド)"
+    - "make run (サーバー起動)"
+
+next_steps:
+  priority_high:
+    - "Go環境の修正とテスト実行確認"
+    - "OpenAPI仕様書の作成とogen統合"
+  priority_medium: 
+    - "Wire DIコンテナの統合"
+    - "環境変数設定の実装"
+    - "本格的なREST APIエンドポイントの追加"
+  priority_low:
+    - "データベース実装（PostgreSQL等）への変更"
+    - "認証・認可機能の追加"

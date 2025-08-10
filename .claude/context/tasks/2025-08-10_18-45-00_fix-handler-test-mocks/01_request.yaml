@@ -1,0 +1,56 @@
+metadata:
+  timestamp: "2025-08-10T18:45:00Z"
+  primary_agent: "main"
+  sub_agent: "go-backend-test-writer"
+  task_id: "fix-handler-test-mocks"
+
+task_definition:
+  purpose: "HTTPハンドラテストのモック設定不具合の修正"
+  background: "UserRepositoryMockのGetByEmailFunc未設定によりテストがパニックしている"
+  expected_outcome: "全てのテストが正常に実行される状態"
+
+context:
+  related_files:
+    - path: "interfaces/http/user_handler_test.go"
+      status: "modification_required"
+    - path: "internal/mocks/user_repository_mock.go"
+      status: "existing"
+  tech_stack:
+    - "Go 1.24.5"
+    - "Ginkgo BDD テストフレームワーク"
+    - "Moq モッキングライブラリ"
+    - "Gomega アサーションライブラリ"
+  constraints:
+    - "既存のテスト構造を維持"
+    - "モックの適切な初期化"
+    - "全テストケースの網羅"
+    - "テストの実行速度維持"
+    - "テストコードの可読性確保"
+  dependencies:
+    - "UserRepositoryインターフェースの実装"
+    - "entities.Userエンティティ"
+    - "entities.ErrUserEmailRequired等のエラー定義"
+
+completion_criteria:
+  functional:
+    - "HTTPハンドラテストの全実行成功"
+    - "モック設定の適切な初期化"
+    - "エラーケースのテスト正常実行"
+    - "GetByEmailFunc未設定パニックの解消"
+  non_functional:
+    - "テストの実行速度維持"
+    - "テストコードの可読性維持"
+    - "モック初期化の最適化"
+  test:
+    - "ginkgo -r interfaces/http での実行成功"
+    - "全17テストケースのパス"
+    - "empty name テストケース正常実行"
+    - "empty email テストケース正常実行"
+
+error_details:
+  panic_message: "UserRepositoryMock.GetByEmailFunc: method is nil but UserRepository.GetByEmail was just called"
+  affected_tests:
+    - "empty name"
+    - "empty email"
+  root_cause: "DescribeTableのテストケースでGetByEmailFuncが未設定状態でGetByEmailメソッドが呼び出されている"
+  specific_location: "interfaces/http/user_handler_test.go lines 131-154でのDescribeTable実行時"

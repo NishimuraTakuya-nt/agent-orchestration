@@ -1,0 +1,46 @@
+metadata:
+  timestamp: "2025-08-10T18:40:00Z"
+  primary_agent: "main"
+  sub_agent: "go-backend-test-writer"
+  task_id: "fix-test-mock-issues"
+
+task_definition:
+  purpose: "HTTPハンドラテストのモック設定不具合の修正"
+  background: "UserRepositoryMockのGetByEmailFunc未設定によりテストがパニックしている"
+  expected_outcome: "全てのテストが正常に実行される状態"
+
+context:
+  related_files:
+    - path: "interfaces/http/user_handler_test.go"
+      status: "needs_fix"
+    - path: "internal/mocks/user_repository_mock.go"
+      status: "existing"
+  tech_stack:
+    - "Ginkgo (BDDテストフレームワーク)"
+    - "Moq (モッキング)"
+    - "Go 1.24.5"
+  constraints:
+    - "既存のテスト構造を維持"
+    - "モックの適切な初期化"
+    - "全テストケースの網羅"
+  dependencies:
+    - "UserRepositoryインターフェースの実装"
+
+completion_criteria:
+  functional:
+    - "HTTPハンドラテストの全実行成功"
+    - "モック設定の適切な初期化"
+    - "エラーケースのテスト正常実行"
+  non_functional:
+    - "テストの実行速度維持"
+    - "テストコードの可読性"
+  test:
+    - "ginkgo -r interfaces/http での実行成功"
+    - "全17テストケースのパス"
+
+error_details:
+  panic_message: "UserRepositoryMock.GetByEmailFunc: method is nil but UserRepository.GetByEmail was just called"
+  affected_tests:
+    - "empty name"
+    - "empty email"
+  root_cause: "モック関数が未設定状態でGetByEmailメソッドが呼び出されている"

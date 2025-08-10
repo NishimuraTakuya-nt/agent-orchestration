@@ -1,0 +1,59 @@
+metadata:
+  timestamp: "2025-08-10T10:35:00Z"
+  primary_agent: "main"
+  sub_agent: "go-backend-test-writer"
+  task_id: "go-rest-api-test-implementation"
+
+task_definition:
+  purpose: "Go REST APIプロジェクトのテストファイル作成と実装"
+  background: "Clean ArchitectureベースのGo REST APIのテストコードが必要"
+  expected_outcome: "Ginkgo+Moqを使用した包括的なテストスイート"
+
+context:
+  related_files: []
+  tech_stack:
+    - "Go"
+    - "Ginkgo (BDD testing framework)"
+    - "github.com/matryer/moq (mocking)"
+    - "Clean Architecture"
+    - "OpenAPI (ogen)"
+    - "chi (HTTPルータ)"
+    - "wire (DI)"
+    - "github.com/sethvargo/go-envconfig"
+  constraints:
+    - "GinkgoとMoqを使用したBDDスタイルのテスト"
+    - "Clean Architectureの各層に対するテスト"
+    - "テーブル駆動テストの積極的な利用"
+    - "モックを適切に活用した単体テスト"
+    - "統合テストの実装"
+  dependencies:
+    - "Go REST APIプロジェクトの基本構造が必要"
+
+completion_criteria:
+  functional:
+    - "entities層のユニットテスト"
+    - "use_cases層のビジネスロジックテスト"
+    - "interfaces層のHTTPハンドラテスト"
+    - "infrastructure層の統合テスト"
+    - "エンドツーエンドテスト"
+    - "適切なモック実装"
+  non_functional:
+    - "高いテストカバレッジの確保"
+    - "保守性の高いテストコード"
+    - "実行速度を考慮したテスト設計"
+  test:
+    - "全てのテストがパスすること"
+    - "go test ./... での実行成功"
+    - "テストカバレッジレポートの生成"
+
+additional_requirements:
+  ginkgo_features:
+    - "Describe/Context/Itによる構造化"
+    - "BeforeEach/AfterEachでのセットアップ"
+    - "テーブル駆動テストパターン"
+  moq_usage:
+    - "外部依存関係のモック"
+    - "インターフェースベースのモッキング"
+  test_structure:
+    - "各層ごとのテストディレクトリ"
+    - "統合テスト用の専用ディレクトリ"
