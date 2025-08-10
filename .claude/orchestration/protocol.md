@@ -102,16 +102,124 @@
 - リソース競合を避けるため、同一ファイルの変更は順次実行
 - テスト関連タスクは実装完了後に実行
 
-## 4. 重要な遵守事項
+## 4. コンテキストの永続化と可視化
+
+### コンテキスト保存ルール
+**すべてのAgent間通信を`.claude/context/`に保存してください：**
+
+#### ディレクトリ構造
+```
+.claude/context/
+├── tasks/                              # タスクごとのコンテキスト
+│   └── {timestamp}_{task-name}/       # 例: 2024-08-10_10-30-00_user-auth
+│       ├── 01_request.yaml            # Primary → Sub への指示
+│       ├── 02_execution.yaml          # Sub Agent実行中の更新
+│       └── 03_response.yaml           # Sub → Primary への報告
+├── summary/
+│   └── latest.yaml                    # 最新のプロジェクト状態
+└── logs/
+    └── {date}.log                     # 日次実行ログ
+```
+
+#### ファイル命名規則
+- タイムスタンプ: `YYYY-MM-DD_HH-MM-SS`形式
+- タスク名: 英数字とハイフン、アンダースコアのみ使用
+- 連番: 実行順序を示す2桁の数字
+
+#### 保存タイミング
+1. **01_request.yaml**: Sub Agent起動直前に保存
+2. **02_execution.yaml**: Sub Agentが重要な決定を行った時点で保存
+3. **03_response.yaml**: Sub Agentのタスク完了時に保存
+
+### YAMLフォーマット仕様
+
+#### 01_request.yaml（Primary → Sub）
+```yaml
+metadata:
+  timestamp: "2024-08-10T10:30:00Z"
+  primary_agent: "main"
+  sub_agent: "backend"
+  task_id: "user-auth-implementation"
+
+task_definition:
+  purpose: "ユーザー認証機能の実装"
+  background: "セキュアなログイン機能が必要"
+  expected_outcome: "JWT認証システム"
+
+context:
+  related_files:
+    - path: "src/models/user.js"
+      status: "existing"
+  tech_stack:
+    - "Node.js"
+    - "Express"
+    - "JWT"
+  constraints:
+    - "bcryptでパスワードハッシュ化"
+    - "リフレッシュトークン実装"
+  dependencies:
+    - "userモデル定義済み"
+
+completion_criteria:
+  functional: 
+    - "ログインAPI"
+    - "ログアウトAPI"
+  non_functional:
+    - "トークン有効期限設定"
+  test:
+    - "単体テスト作成"
+```
+
+#### 03_response.yaml（Sub → Primary）
+```yaml
+metadata:
+  timestamp: "2024-08-10T10:45:00Z"
+  sub_agent: "backend"
+  task_id: "user-auth-implementation"
+  status: "completed"
+
+execution_result:
+  generated_files:
+    - path: "src/middleware/auth.js"
+      action: "created"
+    - path: "src/routes/auth.js"
+      action: "created"
+  implementation_summary: "JWT認証ミドルウェアとAPIエンドポイント実装"
+  technical_decisions:
+    - decision: "アクセストークン15分、リフレッシュトークン7日"
+      reason: "セキュリティとUXのバランス"
+
+context_updates:
+  discoveries:
+    - "既存のエラーハンドリングミドルウェアを活用可能"
+  new_dependencies:
+    - "jsonwebtoken@9.0.0"
+    - "bcrypt@5.1.0"
+  impact_scope:
+    - "全APIルートに認証ミドルウェア適用が必要"
+
+handover:
+  for_agent: "frontend"
+  message: "認証APIのエンドポイント仕様を参照してください"
+  notes:
+    - "/api/auth/loginでPOST"
+    - "レスポンスヘッダーにトークン含む"
+  pending_items:
+    - "レート制限の実装"
+```
+
+## 5. 重要な遵守事項
 
 ### ✅ 必ず守ること
 - コンテキストは累積的に管理（情報を失わない）
+- すべてのAgent間通信をYAML形式で保存
 - 不明な点は推測せず、ユーザーに確認
 - 各ステップの実行内容を明示的に説明
 - エラーや警告も重要なコンテキストとして記録
 
 ### ❌ 避けるべきこと
 - コンテキストなしでのSub Agent起動
+- コンテキスト保存なしでのタスク実行
 - 報告なしでの次タスク実行
 - 依存関係を無視した並列実行
 - 重要な決定の文書化漏れ
