@@ -5,7 +5,6 @@
     "allow": [
       "WebSearch",
       "WebFetch",
-      "Bash(go run:*)",
       "Bash(ls:*)",
       "Bash(touch:*)",
       "Bash(cat:*)",
@@ -18,11 +17,12 @@
       "Bash(wc:*)",
       "Bash(mkdir:*)",
       "Bash(make:*)",
+      "Bash(go:*)",
+      "Bash(ginkgo:*)",
       "Bash(git status)",
       "Bash(git diff:*)",
       "Bash(git log:*)",
       "Bash(git branch:*)",
-      "Bash(gh issue view:*)",
       "Bash(gh pr list:*)",
       "Bash(gh pr view:*)",
       "Bash(gh pr diff:*)",
@@ -40,7 +40,9 @@
       "Edit(docker-compose.yml)",
       "Edit(renovate.json)",
       "Edit(README.md)",
-      "Edit(CLAUDE.md)"
+      "Edit(CLAUDE.md)",
+      "mcp__context7__get-library-docs",
+      "mcp__context7__resolve-library-id"
     ],
     "deny": [
       "Read(~/.ssh/**)",
